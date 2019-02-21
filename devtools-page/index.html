@@ -8,17 +8,19 @@
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
-  <div class="devtools">  
+  <div class="devtools">
     <header class="header">
+      <button id="fetch">Fetch</button>
       <button id="reload-page">Reload</button>
       <button id="download-all">Download all</button>
     </header>
     <main class="main">
-
+      <div id="file-explorer" class="file-explorer"></div>
+      <div id="code-preview" class="code-preview"></div>
     </main>
   </div>
 
-  <script src="jszip.min.js"></script>
+  <script src="libs/jszip.min.js"></script>
   <script src="index.js"></script>
 </body>
 </html>

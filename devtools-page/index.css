@@ -15,3 +15,35 @@ html *::before,
 html *::after {
   box-sizing: inherit;
 }
+
+/* File explorer */
+
+ul.root {
+  list-style: none;
+}
+
+ul.root ul {
+  padding-left: 20px;
+  list-style: inherit;
+}
+
+ul.root input {
+  display: none;
+}
+
+.folder > label {
+  color: blue;
+}
+
+input ~ .folder-content {
+  display: none;
+}
+
+input:checked ~ label {
+  background-color: black;
+  color: white;
+}
+
+input:checked ~ .folder-content {
+  display: block;
+}
