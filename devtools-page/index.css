@@ -47,3 +47,7 @@ input:checked ~ label {
 input:checked ~ .folder-content {
   display: block;
 }
+
+.main {
+  display: flex;
+}

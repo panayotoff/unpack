@@ -1,5 +1,7 @@
 //http://qaru.site/questions/7842022/chromedownloadsdownload-api-saveas-dialogue-is-flashing-on-the-screen-and-then-closes-before-i-see-the-dialogue
 
+window.onload = () => {};
+
 // Reloads page
 document.querySelector('#reload-page').addEventListener('click', () => {
   chrome.tabs.reload(chrome.devtools.inspectedWindow.tabId, null, () => {});
@@ -10,12 +12,15 @@ document.querySelector('#fetch').addEventListener('click', async () => {
   const webpackResources = await getWindowWebpackResources();
   const resourcesTree = flatToTree(webpackResources.src);
   const fileExplorerDom = treeToDom(resourcesTree);
+  const codePreview = new CodeFlask('#code-preview', { language: 'js' });
+
   document.querySelector('#file-explorer').innerHTML = fileExplorerDom;
   document.querySelector('#file-explorer').addEventListener('click', async event => {
     if (event.target.matches('.file')) {
       const filePath = event.target.getAttribute('data-file');
       const file = webpackResources.src.find(r => r.path === filePath);
       const fileContent = await file.content;
+      codePreview.updateCode(fileContent);
     }
   });
 });
