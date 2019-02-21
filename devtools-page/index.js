@@ -1,10 +1,14 @@
 //http://qaru.site/questions/7842022/chromedownloadsdownload-api-saveas-dialogue-is-flashing-on-the-screen-and-then-closes-before-i-see-the-dialogue
 
-document.querySelector('#fetch-all').addEventListener('click', () => {
-  chrome.devtools.inspectedWindow.getResources(resources => {
-    const webpackResources = resources.filter(resource => resource.url.startsWith('webpack://'));
-    processWebpackResources(webpackResources);
-  });
+// document.querySelector('#fetch-all').addEventListener('click', () => {
+//   chrome.devtools.inspectedWindow.getResources(resources => {
+//     const webpackResources = resources.filter(resource => resource.url.startsWith('webpack://'));
+//     processWebpackResources(webpackResources);
+//   });
+// });
+
+document.querySelector('#reload-page').addEventListener('click', () => {
+  chrome.tabs.reload(chrome.devtools.inspectedWindow.tabId, null, () => {});
 });
 
 document.querySelector('#download-all').addEventListener('click', () => {
@@ -56,11 +60,20 @@ function getResourcesMap(resources) {
     src: []
   };
   resources.forEach(async resource => {
+    console.log(resource.url);
+
     if (resource.url.includes('node_modules')) {
       const module_name = resource.url.split('node_modules/')[1].split('/')[0];
       resourcesMap.node_modules.add(module_name);
-    } else if (resource.url.includes('src/')) {
-      const resource_path = resource.url.split('src/')[1];
+    } else {
+      let resource_path;
+      if (resource.url.includes('src/')) {
+        resource_path = resource.url.split('src/')[1];
+      }
+      if (resource.url.startsWith('webpack:///.')) {
+        resource_path = resource.url.split('webpack:///.')[1];
+      }
+
       const resource_content = await getContent(resource);
       const resource_dirname = resource_path.split('/');
       const resource_filename = resource_dirname.pop();

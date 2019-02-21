@@ -1,1 +1,1 @@
-chrome.devtools.panels.create('DeMap', 'icons/icon48.png', 'devtools-page/index.html', panel => {});
+chrome.devtools.panels.create('UnPack', 'icons/icon48.png', 'devtools-page/index.html', panel => {});
