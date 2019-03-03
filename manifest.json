@@ -10,5 +10,9 @@
     "128": "icons/icon128.png"
   },
   "permissions": ["tabs", "http://*/", "https://*/", "*://*/*", "downloads"],
-  "devtools_page": "devtools/index.html"
+  "devtools_page": "devtools/index.html",
+  "background": {
+    "scripts": ["devtools/background.js"],
+    "persistent": false
+  }
 }

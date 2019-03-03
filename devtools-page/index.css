@@ -51,3 +51,7 @@ input:checked ~ .folder-content {
 .main {
   display: flex;
 }
+
+.file-active {
+  font-weight: bold;
+}

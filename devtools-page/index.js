@@ -2,6 +2,13 @@
 
 window.onload = () => {};
 
+// Log helper
+const log = function(...args) {
+  if (chrome && chrome.runtime) {
+    chrome.runtime.sendMessage({ type: 'log', args });
+  }
+};
+
 // Reloads page
 document.querySelector('#reload-page').addEventListener('click', () => {
   chrome.tabs.reload(chrome.devtools.inspectedWindow.tabId, null, () => {});
@@ -12,11 +19,19 @@ document.querySelector('#fetch').addEventListener('click', async () => {
   const webpackResources = await getWindowWebpackResources();
   const resourcesTree = flatToTree(webpackResources.src);
   const fileExplorerDom = treeToDom(resourcesTree);
-  const codePreview = new CodeFlask('#code-preview', { language: 'js' });
+  const codePreview = new CodeFlask('#code-preview', { language: 'js', lineNumbers: true, readonly: true });
 
   document.querySelector('#file-explorer').innerHTML = fileExplorerDom;
   document.querySelector('#file-explorer').addEventListener('click', async event => {
     if (event.target.matches('.file')) {
+      if (document.querySelector('#file-explorer').querySelector('.file-active')) {
+        document
+          .querySelector('#file-explorer')
+          .querySelector('.file-active')
+          .classList.remove('file-active');
+      }
+      
+      event.target.classList.add('file-active');
       const filePath = event.target.getAttribute('data-file');
       const file = webpackResources.src.find(r => r.path === filePath);
       const fileContent = await file.content;
@@ -72,7 +87,10 @@ function downloadZip(content, filename) {
 function getWindowWebpackResources() {
   return new Promise(resolve => {
     chrome.devtools.inspectedWindow.getResources(windowResources => {
-      const webpackResources = windowResources.filter(resource => resource.url.startsWith('webpack://'));
+      // const webpackResources = windowResources.filter(resource => resource.url.startsWith('webpack://'));
+
+      const webpackResources = windowResources.filter(resource => resource.type.startsWith('sm-'));
+      log(webpackResources);
 
       const resources = {
         node_modules: new Set(),
